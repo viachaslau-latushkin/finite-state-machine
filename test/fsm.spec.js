@@ -32,6 +32,7 @@ const config = {
 };
 
 describe('FSM', () => {
+
     describe('#constructor', () => {
         it('throws an exception if config isn\'t passed', () => {
             expect(() => new FSM()).to.throw(Error);
@@ -135,10 +136,20 @@ describe('FSM', () => {
     });
 
     describe('#undo', () => {
+        
         it('returns false for initial FSM', () => {
             const student = new FSM(config);
 
             expect(student.undo()).to.be.false;
+        });
+
+        it('goes back to prev after changeState', () => {
+            
+            const student = new FSM(config);
+
+            student.changeState('hungry');
+            student.undo();
+            expect(student.getState()).to.equal('normal');
         });
 
         it('goes back to prev step after trigger', () => {
@@ -152,15 +163,10 @@ describe('FSM', () => {
             student.trigger('get_hungry');
             student.undo();
             expect(student.getState()).to.equal('busy');
+
         });
 
-        it('goes back to prev after changeState', () => {
-            const student = new FSM(config);
-
-            student.changeState('hungry');
-            student.undo();
-            expect(student.getState()).to.equal('normal');
-        });
+        
 
         it('returns true if transition was successful', () => {
             const student = new FSM(config);
@@ -187,6 +193,7 @@ describe('FSM', () => {
         });
 
         it('cancels undo', () => {
+
             const student = new FSM(config);
 
             student.trigger('study');
@@ -196,7 +203,7 @@ describe('FSM', () => {
 
             student.trigger('get_tired');
             student.trigger('get_hungry');
-
+            
             student.undo();
             student.undo();
 
