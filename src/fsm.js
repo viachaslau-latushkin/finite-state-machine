@@ -7,7 +7,9 @@ class FSM {
         if(!config)
             throw new Error("Error thrown: config not passed");
         else{
-            this.conf = config;
+			var con = config.initial;
+			this.conf = {};
+			this.conf.initial = con;
             this.errorState = false;
             this.stateHistoryUndo = [];
             this.stateHistoryRedo = [];
@@ -110,11 +112,11 @@ class FSM {
             return false;
         else{
             if(this.stateHistoryUndo.length != 1){
-                var redo = this.stateHistoryUndo.splice(this.stateHistoryUndo.length-1);
-                this.stateHistoryRedo.push(redo[0]);
+                var redo = this.stateHistoryUndo.pop();
+                this.stateHistoryRedo.push(redo);
+				this.conf.initial = this.stateHistoryUndo[this.stateHistoryUndo.length-1];
+				return true;
             }
-            this.conf.initial = this.stateHistoryUndo[this.stateHistoryUndo.length-1];
-            return true;
         }
     }
 
