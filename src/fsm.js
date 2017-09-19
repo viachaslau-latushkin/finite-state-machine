@@ -109,8 +109,6 @@ class FSM {
         if(this.stateHistoryUndo.length == 1)
             return false;
         else{
-            //var redo = this.stateHistoryUndo;
-            //this.stateHistoryRedo = redo;
             if(this.stateHistoryUndo.length != 1){
                 var redo = this.stateHistoryUndo.splice(this.stateHistoryUndo.length-1);
                 this.stateHistoryRedo.push(redo[0]);
@@ -130,11 +128,11 @@ class FSM {
             return false;
         else{
             if(this.stateHistoryRedo != 1){
-                var undo = this.stateHistoryRedo.splice(this.stateHistoryRedo.length-1);
-                this.stateHistoryUndo.push(undo[0]);
+                var undo = this.stateHistoryRedo.pop();
+				this.stateHistoryUndo.push(undo);
+				this.conf.initial = undo;
+				return true;
             }
-            this.conf.initial = this.stateHistoryRedo[this.stateHistoryRedo.length-1];
-            return true;
         }
     }
 
